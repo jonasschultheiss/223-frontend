@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Typography from '../Typography';
+
+import { UserContext } from '../../context/user';
 
 import { ReactComponent as Logo } from '../../assets/pants.svg';
 
 export default function (props) {
-  const { isAdmin = true } = props;
-
+  const { user } = useContext(UserContext);
+  let isAdmin = user.role === 'admin';
+  // const isAdmin = true;
   let dashboardLink;
 
   isAdmin

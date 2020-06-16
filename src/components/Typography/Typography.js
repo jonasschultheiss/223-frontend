@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function (props) {
-  const { size, shouldBeBold, shouldBeItalic, shouldBeCentered, shouldBeLight, isLink } = props;
+  const { size, shouldBeBold, shouldBeItalic, shouldBeCentered, shouldBeLight, isLink, isError } = props;
 
   let styles = 'font-sans';
 
@@ -31,6 +31,8 @@ export default function (props) {
 
   if (shouldBeLight) {
     styles += ' text-gray-300';
+  } else if (isError) {
+    styles += ' text-red-700';
   } else {
     styles += ' text-blue-700';
   }
