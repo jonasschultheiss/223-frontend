@@ -43,7 +43,7 @@ const UserContextProvider = ({ children }) => {
         username: jwt.username,
         profilePicture: jwt.profilePicture,
         role: jwt.role,
-        jwt: jwt,
+        jwt: res.data.access_token,
       };
       localStorage.setItem('user', JSON.stringify(state));
       return state;
@@ -69,7 +69,7 @@ const UserContextProvider = ({ children }) => {
           userId: jwt.userId,
           username: jwt.username,
           profilePicture: jwt.profilePicture,
-          role: jwt.role,
+          role: res.data.access_token,
           jwt: jwt,
         };
         localStorage.setItem('user', JSON.stringify(state));
@@ -83,7 +83,7 @@ const UserContextProvider = ({ children }) => {
 
   const saveProfilePicture = async (userId, profilePicture) => {
     const convertedPicture = await toBase64(profilePicture);
-    await axios({
+    const res = await axios({
       method: 'post',
       url: 'http://localhost:3000/user/profilePicture',
       headers: {
@@ -92,13 +92,13 @@ const UserContextProvider = ({ children }) => {
       data: { user: userId, content: convertedPicture },
     });
 
+    console.log('res', res);
+
     setUser((prevState) => {
       const state = { ...prevState, profilePicture: convertedPicture };
       localStorage.setItem('user', JSON.stringify(state));
       return state;
     });
-
-    setUser((prevState) => ({ ...prevState, profilePicture: convertedPicture }));
   };
 
   const signOut = () => {

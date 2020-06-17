@@ -34,11 +34,11 @@ export default function (props) {
           withIcon={true}
           onChange={onDrop}
           buttonText="Choose image"
-          label="Max file size: 5mb, accepted: jpg, png"
+          label="Max file size: 2mb, accepted: jpg, png"
           singleImage
           withPreview
           imgExtension={['.jpg', '.png']}
-          maxFileSize={5242880}
+          maxFileSize={2000000}
         />
         <button onClick={() => saveProfilePictureHandler()}>
           <Typography size="m" shouldBeBold>

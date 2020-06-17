@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Typography from '../../components/Typography';
 
-export default function Index(props) {
+export default function (props) {
   const [posts, setPosts] = useState([]);
 
   const createPosts = (
