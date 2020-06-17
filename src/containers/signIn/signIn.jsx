@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 import { UserContext } from '../../context/user';
 import InputField from '../../components/InputField';
@@ -28,7 +28,7 @@ export default function () {
     event.preventDefault();
     setLoading(true);
     try {
-      const res = await signIn({ username, password });
+      await signIn({ username, password });
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -37,16 +37,14 @@ export default function () {
   };
 
   let errorMessage = error ? (
-    <Typography isError shouldBeBold size="m">
+    <Typography className="mx-auto" center isError shouldBeBold size="m">
       {error.message}
     </Typography>
   ) : null;
 
-  const redirectIfLoggedIn = user.username ? <Link to="/" /> : null;
-
   return (
     <div className="mt-16  w-full md:w-1/4  md:rounded-md md:mx-auto rounded-md border shadow-xl p-8 flex flex-col">
-      {redirectIfLoggedIn}
+      {user.userid ? <Redirect to="/" /> : null}
       {errorMessage}
       <InputField inputChangedHandler={usernameChangedHandler} value={username} label="Username" shouldBeDisabled={loading} />
       <InputField inputChangedHandler={passwordChangedHandler} value={password} label="Password" type="password" shouldBeDisabled={loading} />

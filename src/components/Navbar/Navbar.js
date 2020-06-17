@@ -8,8 +8,8 @@ import { ReactComponent as Logo } from '../../assets/pants.svg';
 
 export default function (props) {
   const { user } = useContext(UserContext);
+  console.log(user);
   let isAdmin = user.role === 'admin';
-  // const isAdmin = true;
   let dashboardLink;
 
   isAdmin
@@ -22,6 +22,28 @@ export default function (props) {
       ))
     : (dashboardLink = null);
 
+  const auth = user.userId ? (
+    <Link to={`/user/${user.userId}`} className="flex flex-row justify-between items-center">
+      <img src={user.profilePicture} alt="tis you" className="rounded-md w-12 mr-4" />
+      <Typography size="l" shouldBeBold isLink>
+        {user.username}
+      </Typography>
+    </Link>
+  ) : (
+    <>
+      <Link to="/signup" className="rounded-md border-2 py-1 px-2 mr-4 border-blue-700 hover:border-blue-900">
+        <Typography size="l" shouldBeBold isLink>
+          Sign Up
+        </Typography>
+      </Link>
+      <Link to="/signin" className="rounded-md border-2 py-1 px-2 border-blue-700 hover:border-blue-900">
+        <Typography size="l" shouldBeBold isLink>
+          Sign In
+        </Typography>
+      </Link>
+    </>
+  );
+
   return (
     <header className="border-b md:flex md:items-center md:justify-between shadow-lg px-10  pt-6 pb-4">
       <Link to="/" className="flex items-center justify-start">
@@ -31,18 +53,7 @@ export default function (props) {
         </Typography>
       </Link>
       {dashboardLink}
-      <div className="flex items-center justify-end">
-        <Link to="/signup" className="rounded-md border-2 py-1 px-2 mr-4 border-blue-700 hover:border-blue-900">
-          <Typography size="l" shouldBeBold isLink>
-            Sign Up
-          </Typography>
-        </Link>
-        <Link to="/signin" className="rounded-md border-2 py-1 px-2 border-blue-700 hover:border-blue-900">
-          <Typography size="l" shouldBeBold isLink>
-            Sign In
-          </Typography>
-        </Link>
-      </div>
+      <div className="flex items-center justify-end">{auth}</div>
     </header>
   );
 }

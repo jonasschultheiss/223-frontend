@@ -26,7 +26,7 @@ export default function (props) {
     styles += ' not-italic';
   }
   if (shouldBeCentered) {
-    styles += ' text-center';
+    styles += ' text-center block';
   }
 
   if (shouldBeLight) {

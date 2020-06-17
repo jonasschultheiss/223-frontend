@@ -4,8 +4,10 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { UserContextProvider } from './context/user';
 
 import Navbar from './components/Navbar';
+import Index from './containers/index';
 import SignIn from './containers/signIn';
 import SignUp from './containers/signUp';
+import User from './containers/user';
 
 function App() {
   return (
@@ -13,14 +15,18 @@ function App() {
       <UserContextProvider>
         <Navbar />
         <Switch>
-          <Route exact path="/"></Route>
+          <Route exact path="/">
+            <Index />
+          </Route>
           <Route exact path="/signin">
             <SignIn />
           </Route>
           <Route exact path="/signup">
             <SignUp />
           </Route>
-          <Route exact path="/user/:id"></Route>
+          <Route exact path="/user/:id">
+            <User />
+          </Route>
           <Route exact path="/dashboard"></Route>
           <Route exact path="/post/:id"></Route>
           <Route exact path="/post/create"></Route>
