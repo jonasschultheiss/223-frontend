@@ -6,7 +6,7 @@ import InputField from '../../components/InputField';
 import Typography from '../../components/Typography';
 
 export default function () {
-  const { user, signIn } = useContext(UserContext);
+  const { currentUser, signIn } = useContext(UserContext);
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -28,7 +28,7 @@ export default function () {
     event.preventDefault();
     setLoading(true);
     try {
-      await signIn({ username, password });
+      await signIn(username, password);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -44,7 +44,7 @@ export default function () {
 
   return (
     <div className="mt-16  w-full md:w-1/4  md:rounded-md md:mx-auto rounded-md border shadow-xl p-8 flex flex-col">
-      {user.userid ? <Redirect to="/" /> : null}
+      {currentUser.userid ? <Redirect to="/" /> : null}
       {errorMessage}
       <InputField inputChangedHandler={usernameChangedHandler} value={username} label="Username" shouldBeDisabled={loading} />
       <InputField inputChangedHandler={passwordChangedHandler} value={password} label="Password" type="password" shouldBeDisabled={loading} />

@@ -7,9 +7,9 @@ import { UserContext } from '../../context/user';
 import { ReactComponent as Logo } from '../../assets/pants.svg';
 
 export default function (props) {
-  const { user } = useContext(UserContext);
-  console.log(user);
-  let isAdmin = user.role === 'admin';
+  const { currentUser } = useContext(UserContext);
+  console.log(currentUser);
+  let isAdmin = currentUser.role === 'admin';
   let dashboardLink;
 
   isAdmin
@@ -22,11 +22,11 @@ export default function (props) {
       ))
     : (dashboardLink = null);
 
-  const auth = user.userId ? (
-    <Link to={`/user/${user.userId}`} className="flex flex-row justify-between items-center">
-      <img src={user.profilePicture} alt="tis you" className="rounded-md w-12 mr-4" />
+  const auth = currentUser.userId ? (
+    <Link to={`/user/${currentUser.userId}`} className="flex flex-row justify-between items-center">
+      <img src={currentUser.profilePicture} alt="tis you" className="rounded-md w-12 mr-4" />
       <Typography size="l" shouldBeBold isLink>
-        {user.username}
+        {currentUser.username}
       </Typography>
     </Link>
   ) : (

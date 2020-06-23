@@ -1,12 +1,12 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-
-import axios from 'axios';
+import { APIContext } from './api';
 
 const UserContext = createContext();
 const UserContextProvider = ({ children }) => {
   const history = useHistory();
-  const [user, setUser] = useState({
+  const { auth, profilePicture } = useContext(APIContext);
+  const [currentUser, setCurrentUser] = useState({
     userId: undefined,
     username: undefined,
     profilePicture: undefined,
@@ -15,10 +15,9 @@ const UserContextProvider = ({ children }) => {
   });
 
   let localStorageUser = localStorage.getItem('user');
-  if (localStorageUser && user.userId === undefined) {
-    console.log(user);
+  if (localStorageUser && currentUser.userId === undefined) {
     localStorageUser = JSON.parse(localStorageUser);
-    setUser({
+    setCurrentUser({
       userId: localStorageUser.userId,
       username: localStorageUser.username,
       profilePicture: localStorageUser.profilePicture,
@@ -26,52 +25,22 @@ const UserContextProvider = ({ children }) => {
       jwt: localStorageUser.jwt,
     });
   }
-  const signIn = async (userObj) => {
-    const { username, password } = userObj;
-    const res = await axios({
-      method: 'post',
-      url: 'http://localhost:3000/login',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: { username, password },
-    });
-    const jwt = JSON.parse(atob(res.data.access_token.split('.')[1]));
-    setUser(() => {
-      const state = {
-        userId: jwt.userId,
-        username: jwt.username,
-        profilePicture: jwt.profilePicture,
-        role: jwt.role,
-        jwt: res.data.access_token,
-      };
+
+  const signIn = async (username, password) => {
+    const jwt = await auth.signIn(username, password);
+    setCurrentUser(() => {
+      const state = { ...jwt };
       localStorage.setItem('user', JSON.stringify(state));
       return state;
     });
     history.push('/');
   };
 
-  const signUp = async (userObj) => {
-    const { username, password, reenteredPassword } = userObj;
+  const signUp = async (username, password, reenteredPassword) => {
     if (password === reenteredPassword) {
-      const res = await axios({
-        method: 'post',
-        url: 'http://localhost:3000/user',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        data: { username, password },
-      });
-      const jwt = JSON.parse(atob(res.data.access_token.split('.')[1]));
-      console.log('res', jwt);
-      setUser(() => {
-        const state = {
-          userId: jwt.userId,
-          username: jwt.username,
-          profilePicture: jwt.profilePicture,
-          role: res.data.access_token,
-          jwt: jwt,
-        };
+      const jwt = await auth.signUp(username, password);
+      setCurrentUser(() => {
+        const state = { ...jwt };
         localStorage.setItem('user', JSON.stringify(state));
         return state;
       });
@@ -81,48 +50,31 @@ const UserContextProvider = ({ children }) => {
     }
   };
 
-  const saveProfilePicture = async (userId, profilePicture) => {
-    const convertedPicture = await toBase64(profilePicture);
-    const res = await axios({
-      method: 'post',
-      url: 'http://localhost:3000/user/profilePicture',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: { user: userId, content: convertedPicture },
-    });
+  const saveProfilePicture = async (userId, picture) => {
+    const convertedImage = await profilePicture.setProfilePicture(userId, picture);
 
-    console.log('res', res);
-
-    setUser((prevState) => {
-      const state = { ...prevState, profilePicture: convertedPicture };
+    setCurrentUser((prevState) => {
+      const state = { ...prevState, profilePicture: convertedImage };
       localStorage.setItem('user', JSON.stringify(state));
       return state;
     });
   };
 
   const signOut = () => {
-    setUser({
-      userId: undefined,
-      username: undefined,
-      profilePicture: undefined,
-      role: undefined,
-      jwt: undefined,
+    setCurrentUser(() => {
+      localStorage.removeItem('user');
+      history.push('/');
+      return {
+        userId: undefined,
+        username: undefined,
+        profilePicture: undefined,
+        role: undefined,
+        jwt: undefined,
+      };
     });
-
-    localStorage.removeItem('user');
-    history.push('/');
   };
 
-  const toBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
-
-  return <UserContext.Provider value={{ user, signIn, signUp, signOut, saveProfilePicture }}>{children}</UserContext.Provider>;
+  return <UserContext.Provider value={{ currentUser, signIn, signUp, signOut, saveProfilePicture }}>{children}</UserContext.Provider>;
 };
 
 export { UserContext, UserContextProvider };
