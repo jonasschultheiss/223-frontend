@@ -8,7 +8,6 @@ import { ReactComponent as Logo } from '../../assets/pants.svg';
 
 export default function (props) {
   const { currentUser } = useContext(UserContext);
-  console.log(currentUser);
   let isAdmin = currentUser.role === 'admin';
   let dashboardLink;
 

@@ -3,9 +3,8 @@ import useAPI from '../api';
 
 const APIContext = createContext();
 const APIContextProvider = ({ children }) => {
-  console.log('APIContextProvider -> useAPI()', useAPI());
-  const { auth, user, profilePicture, comment } = useAPI();
-  return <APIContext.Provider value={{ auth, user, profilePicture, comment }}>{children}</APIContext.Provider>;
+  const { auth, user, profilePicture, comment, post } = useAPI();
+  return <APIContext.Provider value={{ auth, user, profilePicture, comment, post }}>{children}</APIContext.Provider>;
 };
 
 export { APIContext, APIContextProvider };

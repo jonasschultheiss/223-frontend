@@ -12,7 +12,7 @@ export default function (props) {
   const [title, setTitle] = useState('');
   const [picture, setPicture] = useState([]);
 
-  const { user } = useContext(UserContext);
+  const { currentUser } = useContext(UserContext);
   const history = useHistory();
 
   const titleChangedHandler = (event) => {
@@ -39,7 +39,7 @@ export default function (props) {
       url: 'http://localhost:3000/image',
       headers: {
         'Content-Type': 'application/json',
-        authorization: `Bearer ${JSON.stringify(user.jwt)}`,
+        authorization: `Bearer ${JSON.stringify(currentUser.jwt)}`,
       },
       data: { text: title, imageText: image },
     });

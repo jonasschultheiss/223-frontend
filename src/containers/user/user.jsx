@@ -10,7 +10,6 @@ export default function (props) {
   const { currentUser, signOut, saveProfilePicture } = useContext(UserContext);
   const { user } = useContext(APIContext);
   const [picture, setPicture] = useState([]);
-  console.log(picture);
 
   const onDrop = (picture) => {
     setPicture(picture);

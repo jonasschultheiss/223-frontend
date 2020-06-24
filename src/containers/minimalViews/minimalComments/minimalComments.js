@@ -13,7 +13,6 @@ export default function () {
   useEffect(() => {
     const fetchComments = async () => {
       const res = await comment.getAllFromUser(currentUser.jwt, currentUser.userId);
-      console.log('fetchComments -> res', res);
     };
     fetchComments();
   }, [comment, currentUser.jwt, currentUser.userId]);
