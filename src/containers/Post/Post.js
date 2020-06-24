@@ -98,13 +98,16 @@ export default function (props) {
           <img className=" w-112" src={content} alt="post content" />
         </Link>
       </div>
-      <div className="flex flex-row border-t border-b p-4">
+      <div className="flex flex-row justify-between border-t border-b p-4">
         {currentUser.userId ? (
           <button className=" mr-4 focus:outline-none" onClick={(e) => likedHandler(e)}>
             {heart}
           </button>
         ) : null}
         <Typography className="m-auto">{`${likes ? likes.length : 0} Likes`}</Typography>
+        <Typography shouldBeBold className="m-auto">
+          {title}
+        </Typography>
       </div>
       {comments.length !== 0 ? (
         <div className="flex flex-col  px-4">
