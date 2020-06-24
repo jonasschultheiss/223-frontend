@@ -28,6 +28,7 @@ export default function (props) {
 
     const fetchComments = async () => {
       const res = await comment.getByPostId(id);
+      console.log('fetchComments -> res', res);
       setComments(res);
     };
 
@@ -63,11 +64,13 @@ export default function (props) {
   const postNewCommentHandler = (e) => {
     e.preventDefault();
     comment.createNewComment(currentUser.jwt, id, newComment);
+    setComments([...comments]);
     setNewComment('');
   };
 
   const handlePostDelete = async (e) => {
     e.preventDefault();
+    console.log('handlePostDelete -> currentUser.jwt', currentUser.jwt);
     await post.remove(currentUser.jwt, id);
     history.push('/');
   };
@@ -89,11 +92,6 @@ export default function (props) {
             {user.username}
           </Typography>
         </Link>
-        {currentUser.role === 'admin' || currentUser.role === 'mod' ? (
-          <button className=" justify-end focus:outline-none ml-4" onClick={(e) => handlePostDelete(e)}>
-            <Trash className="w-6 h-6 text-pink-700 fill-current  outline-none " />
-          </button>
-        ) : null}
       </div>
       <div className="border-t">
         <Link to={`/post/${id}`}>
@@ -117,7 +115,7 @@ export default function (props) {
                 .map((cmt, k) => {
                   return (
                     <div key={k} className="flex flex-row my-1">
-                      <Typography shouldBeBold>idk: </Typography>
+                      <Typography shouldBeBold>{`${cmt.user.username}: `}</Typography>
                       <Typography>{cmt.text}</Typography>
                     </div>
                   );

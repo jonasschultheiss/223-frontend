@@ -7,20 +7,20 @@ import { ReactComponent as Trash } from '../../assets/delete.svg';
 
 export default function (props) {
   console.log('props', props);
-  const [comments, setComments] = useState([]);
+  const [posts, setPosts] = useState([]);
   const { id } = useParams();
   const { currentUser } = useContext(UserContext);
   const { comment } = useContext(APIContext);
 
   useEffect(() => {
-    setComments(props.comments);
-  }, [props.comments]);
+    setPosts(props.posts);
+  }, [props.posts]);
 
   const removeCommentHandler = (e, commentId) => {
     e.preventDefault();
     comment.deleteComment(currentUser.jwt, commentId);
-    const filteredComments = comments.filter((cmt) => cmt.id !== commentId);
-    setComments([...filteredComments]);
+    const filteredComments = posts.filter((cmt) => cmt.id !== commentId);
+    se([...filteredComments]);
   };
 
   return (
