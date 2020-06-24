@@ -7,6 +7,8 @@ import { UserContext } from '../../context/user';
 import Post from '../Post';
 
 import { ReactComponent as Plus } from '../../assets/plus.svg';
+import { ReactComponent as Forward } from '../../assets/forward.svg';
+import { ReactComponent as Back } from '../../assets/back.svg';
 
 export default function (props) {
   const [posts, setPosts] = useState([]);
@@ -23,6 +25,21 @@ export default function (props) {
     fetchPosts();
   }, [pageIndex, post]);
 
+  const previousPageHandler = (e) => {
+    e.preventDefault();
+    if (pageIndex !== 1) {
+      setPageIndex(pageIndex - 1);
+    }
+  };
+
+  const nextPageHandler = (e) => {
+    e.preventDefault();
+    console.log(posts.length);
+    if (posts.length === 10) {
+      setPageIndex(pageIndex + 1);
+    }
+  };
+
   const createPosts = (
     <div className="flex flex-row">
       <div>
@@ -36,8 +53,19 @@ export default function (props) {
 
       <div className="flex flex-col ml-16">
         {posts.map((post, key) => {
-          return <Post data={post} key={key} />;
+          return <Post limited data={post} key={key} />;
         })}
+        <div className="flex flex-row mx-auto justify-center p-2 border shadow-md rounded">
+          <button className="focus:outline-none" onClick={(e) => previousPageHandler(e)}>
+            <Back className="w-6 h-6 text-blue-700 fill-current inline-block outline-none" />
+          </button>
+          <Typography shouldBeBold size="l">
+            {pageIndex}
+          </Typography>
+          <button className="focus:outline-none" onClick={(e) => nextPageHandler(e)}>
+            <Forward className="w-6 h-6 text-blue-700 fill-current inline-block outline-none" />
+          </button>
+        </div>
       </div>
     </div>
   );

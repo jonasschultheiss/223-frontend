@@ -28,8 +28,10 @@ const UserContextProvider = ({ children }) => {
 
   const signIn = async (username, password) => {
     const jwt = await auth.signIn(username, password);
+    const pb = await profilePicture.getProfilePicture(jwt.userId);
+    console.log('signIn -> pb', pb);
     setCurrentUser(() => {
-      const state = { ...jwt };
+      const state = { ...jwt, profilePicture: pb ? pb.content : undefined };
       localStorage.setItem('user', JSON.stringify(state));
       return state;
     });

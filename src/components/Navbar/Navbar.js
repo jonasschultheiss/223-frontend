@@ -5,9 +5,11 @@ import Typography from '../Typography';
 import { UserContext } from '../../context/user';
 
 import { ReactComponent as Logo } from '../../assets/pants.svg';
+import defaultLogo from '../../assets/pp.jpg';
 
 export default function (props) {
   const { currentUser } = useContext(UserContext);
+
   let isAdmin = currentUser.role === 'admin';
   let dashboardLink;
 
@@ -23,7 +25,7 @@ export default function (props) {
 
   const auth = currentUser.userId ? (
     <Link to={`/user/${currentUser.userId}`} className="flex flex-row justify-between items-center">
-      <img src={currentUser.profilePicture} alt="tis you" className="rounded-md w-12 mr-4" />
+      <img src={currentUser.profilePicture || defaultLogo} alt="tis you" className="rounded-md w-12 mr-4" />
       <Typography size="l" shouldBeBold isLink>
         {currentUser.username}
       </Typography>

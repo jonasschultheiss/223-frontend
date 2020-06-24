@@ -4,6 +4,7 @@ import ImageUploader from 'react-images-upload';
 import axios from 'axios';
 
 import { UserContext } from '../../context/user';
+import { APIContext } from '../../context/api';
 
 import Typography from '../../components/Typography';
 import InputField from '../../components/InputField';
@@ -13,6 +14,7 @@ export default function (props) {
   const [picture, setPicture] = useState([]);
 
   const { currentUser } = useContext(UserContext);
+  const { profilePicture } = useContext(APIContext);
   const history = useHistory();
 
   const titleChangedHandler = (event) => {
@@ -43,7 +45,7 @@ export default function (props) {
       },
       data: { text: title, imageText: image },
     });
-    history.push(`/post/${res}`);
+    history.push(`/post/${res.data}`);
   };
 
   return (

@@ -1,15 +1,18 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { APIContext } from '../../context/api';
 import { UserContext } from '../../context/user';
 import Typography from '../../components/Typography';
 import { ReactComponent as EmptyHeart } from '../../assets/emptyHeart.svg';
 import { ReactComponent as FilledHeart } from '../../assets/filledHeart.svg';
+import { ReactComponent as Trash } from '../../assets/delete.svg';
+import defaultPb from '../../assets/pp.jpg';
 
 export default function (props) {
   const { post, profilePicture, comment } = useContext(APIContext);
   const { currentUser } = useContext(UserContext);
   const { id, content, title, updateDate, user } = props.data;
+  const history = useHistory();
 
   const [profilePic, setProfilePic] = useState();
   const [likes, setLikes] = useState();
@@ -20,6 +23,7 @@ export default function (props) {
   useEffect(() => {
     const fetchProfilePic = async () => {
       const res = await profilePicture.getProfilePicture(user.id);
+      setProfilePic(res.content);
     };
 
     const fetchComments = async () => {
@@ -62,6 +66,12 @@ export default function (props) {
     setNewComment('');
   };
 
+  const handlePostDelete = async (e) => {
+    e.preventDefault();
+    await post.remove(currentUser.jwt, id);
+    history.push('/');
+  };
+
   let heart;
 
   if (isLiked) {
@@ -71,14 +81,19 @@ export default function (props) {
   }
 
   return (
-    <div className="flex flex-col rounded-md border shadow-md mb-8" key={props.key}>
-      <div className="m-4 mb-0">
+    <div className="flex flex-col rounded-md border shadow-md mb-8">
+      <div className="m-4 mb-0 flex flex-row">
         <Link className="flex flex-row" to={`/user/${user.id}`}>
-          <img className="justify-start mr-4 w-6 h-6 rounded-full" src={profilePic} alt="Nice" />
+          <img className="justify-start mr-4 w-6 h-6 rounded-full" src={profilePic || defaultPb} alt="Nice" />
           <Typography shouldBeBold isLink size="l">
             {user.username}
           </Typography>
         </Link>
+        {currentUser.role === 'admin' || currentUser.role === 'mod' ? (
+          <button className=" justify-end focus:outline-none ml-4" onClick={(e) => handlePostDelete(e)}>
+            <Trash className="w-6 h-6 text-pink-700 fill-current  outline-none " />
+          </button>
+        ) : null}
       </div>
       <div className="border-t">
         <Link to={`/post/${id}`}>
@@ -95,22 +110,26 @@ export default function (props) {
       </div>
       {comments.length !== 0 ? (
         <div className="flex flex-col  px-4">
-          {props.limited ? (
-            <>
-              <div className="flex flex-row my-1">
-                <Typography shouldBeBold>User1:</Typography>
-                <Typography>Very nice picture</Typography>
-              </div>
-              <div className="flex flex-row my-2">
-                <Typography shouldBeBold>User1:</Typography>
-                <Typography>Very nice picture</Typography>
-              </div>
-              <div className="flex flex-row my-2">
-                <Typography shouldBeBold>User1:</Typography>
-                <Typography>Very nice picture</Typography>
-              </div>
-            </>
-          ) : null}
+          {props.limited
+            ? comments
+                .reverse()
+                .slice(0, 3)
+                .map((cmt, k) => {
+                  return (
+                    <div key={k} className="flex flex-row my-1">
+                      <Typography shouldBeBold>idk: </Typography>
+                      <Typography>{cmt.text}</Typography>
+                    </div>
+                  );
+                })
+            : comments.map((cmt, k) => {
+                return (
+                  <div key={k} className="flex flex-row my-1">
+                    <Typography shouldBeBold>idk: </Typography>
+                    <Typography>{cmt.text}</Typography>
+                  </div>
+                );
+              })}
         </div>
       ) : null}
       {currentUser.userId ? (

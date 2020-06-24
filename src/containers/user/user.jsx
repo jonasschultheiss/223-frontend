@@ -15,8 +15,8 @@ export default function (props) {
     setPicture(picture);
   };
 
-  const saveProfilePictureHandler = () => {
-    saveProfilePicture(currentUser.userId, picture[0]);
+  const saveProfilePictureHandler = async () => {
+    await saveProfilePicture(currentUser.userId, picture[0]);
   };
 
   const deleteUserHandler = async () => {
