@@ -1,14 +1,14 @@
 import React, { useContext, useState } from 'react';
 import { Redirect } from 'react-router-dom';
-
-import { UserContext } from '../../context/user';
 import InputField from '../../components/InputField';
 import Typography from '../../components/Typography';
+import { UserContext } from '../../context/user';
 
 export default function () {
   const { currentUser, signUp } = useContext(UserContext);
 
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [reenteredPassword, setReenteredPassword] = useState('');
 
@@ -18,6 +18,11 @@ export default function () {
   const usernameChangedHandler = (event) => {
     event.preventDefault();
     setUsername(event.target.value);
+  };
+
+  const emailChangedHandler = (event) => {
+    event.preventDefault();
+    setEmail(event.target.value);
   };
 
   const passwordChangedHandler = (event) => {
@@ -34,7 +39,7 @@ export default function () {
     event.preventDefault();
     setLoading(true);
     try {
-      await signUp(username, password, reenteredPassword);
+      await signUp(username, email, password, reenteredPassword);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -53,6 +58,7 @@ export default function () {
       {currentUser.userid ? <Redirect to="/" /> : null}
       {errorMessage}
       <InputField inputChangedHandler={usernameChangedHandler} value={username} label="Username" shouldBeDisabled={loading} />
+      <InputField inputChangedHandler={emailChangedHandler} value={email} label="E-Mail" type="email" shouldBeDisabled={loading} />
       <InputField inputChangedHandler={passwordChangedHandler} value={password} label="Password" type="password" shouldBeDisabled={loading} />
       <InputField
         inputChangedHandler={reenteredPasswordChangedHandler}

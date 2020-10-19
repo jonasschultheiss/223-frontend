@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { APIContext } from './api';
 
@@ -38,9 +38,10 @@ const UserContextProvider = ({ children }) => {
     history.push('/');
   };
 
-  const signUp = async (username, password, reenteredPassword) => {
+  const signUp = async (username, email, password, reenteredPassword) => {
     if (password === reenteredPassword) {
-      const jwt = await auth.signUp(username, password);
+      const jwt = await auth.signUp(username, email, password);
+      console.log('signUp -> jwt', jwt);
       setCurrentUser(() => {
         const state = { ...jwt };
         localStorage.setItem('user', JSON.stringify(state));

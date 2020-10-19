@@ -16,7 +16,6 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1"
   },
-  "proxy": "http://localhost:3000",
   "scripts": {
     "build:style": "tailwind build src/styles/index.css -o src/styles/tailwind.css",
     "start": "yarn build:style && react-scripts start",
